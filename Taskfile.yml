@@ -1,0 +1,60 @@
+version: '3'
+
+vars:
+    APP_NAME:
+        sh: pwd | grep -Po "[^/]+$"
+    SOURCE_DIR:
+        sh: find $(pwd) -mindepth 1 -maxdepth 2 -regex ".*\.go$" | head -n 1 | grep -Po ".*(?=\/)"
+    SUB_MODS:
+        sh: find src -mindepth 1 -maxdepth 1 -type d | grep -Po "(?<=src/).*" | tr '\n' ':'
+
+tasks:
+    default:
+        cmds:
+            - task: test
+            - task: build
+
+    build:
+        desc: build binary using remote ghwfe script, requires curl
+        cmds:
+            - cmd: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/go_build.sh | bash
+
+    test:
+        desc: run go tests
+        sources:
+            - src/*
+        method: timestamp
+        dir: src
+        cmds:
+            - cmd: >-
+                go test
+                -trace go.trace -race -cover -bench=.
+                {{.SOURCE_DIR}}/*.go
+
+    deploy:
+        desc: build and copy to my personal arch mybins folder
+        cmds:
+            - task: build
+            - cmd : cp -rpf build/* ${HOME}/tools/arch/mybins/
+
+    mod:
+        env:
+            SD: "{{.SOURCE_DIR}}"
+            AN: "{{.APP_NAME}}"
+        desc: update go modules, add submodules to go root
+        cmds:
+            - cmd: if [[ ! -f go.mod ]]; then go mod init {{.APP_NAME}}; fi
+            - cmd: go mod tidy
+            - cmd: mkdir -p "${GOROOT}/src/{{.APP_NAME}}"
+            - cmd: >-
+                {{range $i, $mod := split ":" .SUB_MODS }}
+                    {{if $mod}}
+                        if [[ ! -L "${GOROOT}/src/${AN}/{{$mod}}" ]]; then
+                            if [[ ! -d "${GOROOT}/src/${AN}/{{$mod}}" ]]; then
+                                if [[ ! -f "${GOROOT}/src/${AN}/{{$mod}}" ]]; then
+                                    ln -s ${SD}/{{$mod}} "${GOROOT}/src/${AN}/{{$mod}}"
+                                fi
+                            fi
+                        fi
+                    {{end}}
+                {{end}}
