@@ -34,7 +34,6 @@ jobs:
             -
                 name: Gzip assets
                 env:
-                    BASE_DIR: build
                     # SOURCE_FOLDER: build
                     # TARGET_FOLDER: /tmp/assets
                     VERSION_COMMAND: date +%y.%m.%d

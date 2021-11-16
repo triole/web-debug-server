@@ -9,24 +9,32 @@ import (
 )
 
 type tResponse struct {
-	Method      string
-	Proto       string
-	Host        string
-	URL         string
-	QueryParams map[string][]string
-	QueryBody   string
+	Method  string
+	Proto   string
+	Host    string
+	URL     string
+	Request tRequest
+}
+
+type tRequest struct {
+	Params  map[string][]string
+	Body    string
+	Headers map[string][]string
 }
 
 type handler struct{}
 
 func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	data := tResponse{
-		Method:      req.Method,
-		Proto:       req.Proto,
-		Host:        req.Host,
-		URL:         fmt.Sprintf("%s", req.URL),
-		QueryParams: queryParams(resp, req),
-		QueryBody:   queryBody(resp, req),
+		Method: req.Method,
+		Proto:  req.Proto,
+		Host:   req.Host,
+		URL:    fmt.Sprintf("%s", req.URL),
+		Request: tRequest{
+			Headers: reqHeaders(req),
+			Body:    queryBody(resp, req),
+			Params:  queryParams(resp, req),
+		},
 	}
 
 	log.Printf("[INFO] %s %s %s%s", data.Method, data.Proto, data.Host, data.URL)
@@ -49,5 +57,18 @@ func queryBody(w http.ResponseWriter, r *http.Request) (body string) {
 		fmt.Printf("Error parsing requests body: %q\n", err)
 	}
 	body = string(bodyBytes)
+	return
+}
+
+func reqHeaders(r *http.Request) (rh map[string][]string) {
+	rh = make(map[string][]string)
+	for name, values := range r.Header {
+		// Loop over all values for the name.
+		arr := []string{}
+		for _, val := range values {
+			arr = append(arr, val)
+		}
+		rh[name] = arr
+	}
 	return
 }
