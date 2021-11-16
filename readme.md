@@ -3,7 +3,8 @@
 <!--- mdtoc: toc begin -->
 
 1. [Synopsis](#synopsis)
-2. [Usage Examples](#usage-examples)<!--- mdtoc: toc end -->
+2. [Usage Examples](#usage-examples)
+3. [Help](#help)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
@@ -65,4 +66,16 @@ $ curl -X POST -F 'os=linux' http://localhost:9999
   },
   "URL": "/"
 }
+```
+
+## Help
+
+```go mdox-exec="r -h"
+
+simple web server for debugging purposes
+
+Flags:
+  -h, --help            Show context-sensitive help.
+  -p, --port=9999       port where to serve
+  -V, --version-flag    display version
 ```
