@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-    goreleaser:
+    release:
         runs-on: ubuntu-latest
         steps:
             -
@@ -37,7 +37,7 @@ jobs:
                     # SOURCE_FOLDER: build
                     # TARGET_FOLDER: /tmp/assets
                     VERSION_COMMAND: date +%y.%m.%d
-                run: curl -sL https://raw.githubusercontent.com/triole/ghwfe/dev/master/gzip_builds.sh | bash
+                run: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/gzip_builds.sh | bash
             -
                 name: Upload release binaries
                 uses: alexellis/upload-assets@0.3.0
