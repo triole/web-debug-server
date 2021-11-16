@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -13,6 +14,7 @@ type tResponse struct {
 	Host        string
 	URL         string
 	QueryParams map[string][]string
+	QueryBody   string
 }
 
 type handler struct{}
@@ -24,6 +26,7 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		Host:        req.Host,
 		URL:         fmt.Sprintf("%s", req.URL),
 		QueryParams: queryParams(resp, req),
+		QueryBody:   queryBody(resp, req),
 	}
 
 	log.Printf("[INFO] %s %s %s%s", data.Method, data.Proto, data.Host, data.URL)
@@ -37,5 +40,14 @@ func queryParams(w http.ResponseWriter, r *http.Request) (qp map[string][]string
 	for k, v := range r.URL.Query() {
 		qp[k] = v
 	}
+	return
+}
+
+func queryBody(w http.ResponseWriter, r *http.Request) (body string) {
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Printf("Error parsing requests body: %q\n", err)
+	}
+	body = string(bodyBytes)
 	return
 }
