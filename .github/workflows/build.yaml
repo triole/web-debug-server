@@ -33,7 +33,7 @@ jobs:
                 run: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/go_build.sh | bash
             -
                 name: Gzip assets
-                env:
+                # env:
                     # SOURCE_FOLDER: build
                     # TARGET_FOLDER: /tmp/assets
                     # VERSION_COMMAND: date +%y.%m.%d
