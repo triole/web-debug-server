@@ -1,4 +1,4 @@
-# Web Debug Server
+# Web Debug Server ![build](https://github.com/triole/web-debug-server/actions/workflows/build.yaml/badge.svg)
 
 <!--- mdtoc: toc begin -->
 
