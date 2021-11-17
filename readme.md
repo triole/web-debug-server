@@ -12,7 +12,7 @@ A simple web debug server echoing requests. Send a something and retrieve a json
 
 ## Usage Examples
 
-$ curl -s http://localhost:9999?name=john
+$ curl http://localhost:9999?name=john
 
 ```json
 {
