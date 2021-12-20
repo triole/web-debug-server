@@ -17,7 +17,9 @@ tasks:
     build:
         desc: build binary using remote ghwfe script, requires curl
         cmds:
-            - cmd: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/go_build.sh | bash
+            - cmd: |
+                export SOURCE_FOLDER=src
+                curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/go_build.sh | bash
         env:
             SOURCE_FOLDER: src
 
