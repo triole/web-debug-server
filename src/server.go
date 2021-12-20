@@ -37,7 +37,15 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		},
 	}
 
-	log.Printf("[INFO] %s %s %s%s", data.Method, data.Proto, data.Host, data.URL)
+	if CLI.Verbose == false {
+		log.Printf("[INFO] %s %s %s%s", data.Method, data.Proto, data.Host, data.URL)
+	} else {
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			log.Fatalf("Error. Can not marshal data to print: %s", err.Error())
+		}
+		log.Printf("[INFO] %s", jsonData)
+	}
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusCreated)
 	json.NewEncoder(resp).Encode(data)

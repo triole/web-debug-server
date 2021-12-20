@@ -28,6 +28,6 @@ func main() {
 		Handler: &handler{},
 	}
 
-	log.Printf("[INFO] Listening at %s", bind)
+	log.Printf("[INFO] Listen at %s, verbose: %v", bind, CLI.Verbose)
 	log.Fatal(httpServer.ListenAndServe())
 }

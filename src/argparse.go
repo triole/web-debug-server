@@ -20,6 +20,7 @@ var (
 
 var CLI struct {
 	Port        int  `help:"port where to serve" short:p default:9999`
+	Verbose     bool `help:"verbose mode, print full response data set" short:v`
 	VersionFlag bool `help:"display version" short:V`
 }
 
