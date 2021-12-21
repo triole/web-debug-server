@@ -19,9 +19,11 @@ var (
 )
 
 var CLI struct {
-	Port        int  `help:"port where to serve" short:p default:9999`
-	Verbose     bool `help:"verbose mode, print full response data set" short:v`
-	VersionFlag bool `help:"display version" short:V`
+	Port        int    `help:"port where to serve" short:p default:9999`
+	JSONLog     bool   `help:"enable json log, instead of text one" short:j`
+	LogFile     string `help:"log file" short:l default:/dev/stdout`
+	Verbose     bool   `help:"verbose mode, print full response data set" short:v`
+	VersionFlag bool   `help:"display version" short:V`
 }
 
 func parseArgs() {

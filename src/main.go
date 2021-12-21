@@ -2,8 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	"web-debug-server/logging"
+
+	"github.com/sirupsen/logrus"
+)
+
+var (
+	lg logging.Logging
 )
 
 type tConf struct {
@@ -18,6 +25,8 @@ func main() {
 		Port: CLI.Port,
 	}
 
+	lg = logging.Init(CLI.LogFile, CLI.JSONLog)
+
 	bind := ""
 	if bind == "" {
 		bind = fmt.Sprintf(":%d", conf.Port)
@@ -28,6 +37,18 @@ func main() {
 		Handler: &handler{},
 	}
 
-	log.Printf("[INFO] Listen at %s, verbose: %v", bind, CLI.Verbose)
-	log.Fatal(httpServer.ListenAndServe())
+	if lg.LogToFile == true {
+		fmt.Printf(
+			"Run server\tport=%d, verbose=%v, logfile=%s\n",
+			conf.Port, CLI.Verbose, CLI.LogFile,
+		)
+	}
+
+	lg.LogInfo("Run server", logrus.Fields{
+		"port":    conf.Port,
+		"verbose": CLI.Verbose,
+		"logfile": CLI.LogFile,
+	})
+
+	lg.LogError(httpServer.ListenAndServe(), nil)
 }

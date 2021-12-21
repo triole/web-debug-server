@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/sirupsen/logrus"
 )
 
 type tResponse struct {
@@ -38,13 +39,18 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	if CLI.Verbose == false {
-		log.Printf("[INFO] %s %s %s%s", data.Method, data.Proto, data.Host, data.URL)
+		lg.LogInfo("Got request", logrus.Fields{
+			"method": data.Method,
+			"proto":  data.Proto,
+			"host":   data.Host,
+			"url":    data.URL,
+		})
 	} else {
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			log.Fatalf("Error. Can not marshal data to print: %s", err.Error())
+			lg.LogError(err.Error(), nil)
 		}
-		log.Printf("[INFO] %s", jsonData)
+		lg.LogInfo("Got request", logrus.Fields{"data": fmt.Sprintf("%s", jsonData)})
 	}
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusCreated)
@@ -71,7 +77,7 @@ func queryBody(w http.ResponseWriter, r *http.Request) (body string) {
 func reqHeaders(r *http.Request) (rh map[string][]string) {
 	rh = make(map[string][]string)
 	for name, values := range r.Header {
-		// Loop over all values for the name.
+		// loop over all values for the name
 		arr := []string{}
 		for _, val := range values {
 			arr = append(arr, val)
