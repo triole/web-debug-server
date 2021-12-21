@@ -23,6 +23,11 @@ jobs:
                     TARGET_FOLDER: /home/runner/.local/bin
                 run: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/install_go.sh | bash
             -
+                name: Add packages in sub folders to GOROOT
+                env:
+                    SOURCE_FOLDER: src
+                run: curl -sL https://raw.githubusercontent.com/triole/ghwfe/master/sh/go_add_sub_packages.sh | bash
+            -
                 name: Build
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
