@@ -4,7 +4,8 @@
 
 1. [Synopsis](#synopsis)
 2. [Usage Examples](#usage-examples)
-3. [Help](#help)<!--- mdtoc: toc end -->
+3. [Custom Response Codes](#custom-response-codes)
+4. [Help](#help)<!--- mdtoc: toc end -->
 
 ## Synopsis
 
@@ -67,6 +68,10 @@ $ curl -X POST -F 'os=linux' http://localhost:9999
   "URL": "/"
 }
 ```
+
+## Custom Response Codes
+
+Custom response status codes can be set through the called url. Use `/status/` and append the required integer. I.e. `/status/404` responds with a 404 status code and so on.
 
 ## Help
 

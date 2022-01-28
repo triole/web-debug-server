@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 )
@@ -26,6 +27,8 @@ type tRequest struct {
 type handler struct{}
 
 func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	responseCode := parseResponseCode(req.URL.String())
+	resp.WriteHeader(responseCode)
 	data := tResponse{
 		Method: req.Method,
 		Proto:  req.Proto,
@@ -40,10 +43,11 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 
 	if CLI.Verbose == false {
 		lg.LogInfo("Got request", logrus.Fields{
-			"method": data.Method,
-			"proto":  data.Proto,
-			"host":   data.Host,
-			"url":    data.URL,
+			"method":        data.Method,
+			"proto":         data.Proto,
+			"host":          data.Host,
+			"url":           data.URL,
+			"response_code": responseCode,
 		})
 	} else {
 		jsonData, err := json.Marshal(data)
@@ -53,7 +57,6 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		lg.LogInfo("Got request", logrus.Fields{"data": fmt.Sprintf("%s", jsonData)})
 	}
 	resp.Header().Set("Content-Type", "application/json")
-	resp.WriteHeader(http.StatusCreated)
 	json.NewEncoder(resp).Encode(data)
 }
 
@@ -83,6 +86,18 @@ func reqHeaders(r *http.Request) (rh map[string][]string) {
 			arr = append(arr, val)
 		}
 		rh[name] = arr
+	}
+	return
+}
+
+func parseResponseCode(s string) (code int) {
+	code = 200
+	match := rxFindSubMatch(`/status/(?P<code>\d{3})`, "code", s)
+	if match != "" {
+		matchInt, err := strconv.Atoi(match)
+		if err == nil {
+			code = matchInt
+		}
 	}
 	return
 }
