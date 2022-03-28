@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"web-debug-server/logging"
+	"web-debug-server/src/logging"
 
 	"github.com/sirupsen/logrus"
 )
@@ -14,15 +14,17 @@ var (
 )
 
 type tConf struct {
-	Bind string
-	Port int
+	Bind          string
+	Port          int
+	ResponseDelay []int
 }
 
 func main() {
 	parseArgs()
 
 	conf := tConf{
-		Port: CLI.Port,
+		Port:          CLI.Port,
+		ResponseDelay: CLI.ResponseDelay,
 	}
 
 	lg = logging.Init(CLI.LogFile, CLI.JSONLog)

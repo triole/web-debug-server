@@ -82,6 +82,10 @@ simple web server for debugging purposes
 Flags:
   -h, --help                      Show context-sensitive help.
   -p, --port=9999                 port where to serve
+  -r, --response-delay=RESPONSE-DELAY,...
+                                  server response delay in ms, use twice to
+                                  define range for a random value before each
+                                  request
   -j, --json-log                  enable json log, instead of text one
   -l, --log-file="/dev/stdout"    log file
   -v, --verbose                   verbose mode, print full response data set

@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
+	"sort"
 	"strconv"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -27,6 +30,17 @@ type tRequest struct {
 type handler struct{}
 
 func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	if len(CLI.ResponseDelay) == 1 {
+		time.Sleep(time.Duration(CLI.ResponseDelay[0]) * time.Millisecond)
+	}
+	if len(CLI.ResponseDelay) == 2 {
+		sort.Ints(CLI.ResponseDelay)
+		time.Sleep(
+			time.Duration(
+				randomIntRange(CLI.ResponseDelay[0], CLI.ResponseDelay[1]),
+			) * time.Millisecond,
+		)
+	}
 	responseCode := parseResponseCode(req.URL.String())
 	resp.WriteHeader(responseCode)
 	data := tResponse{
@@ -100,4 +114,12 @@ func parseResponseCode(s string) (code int) {
 		}
 	}
 	return
+}
+
+func randomIntRange(min, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	if max <= min {
+		max = min + 1
+	}
+	return rand.Intn(max-min) + min
 }
