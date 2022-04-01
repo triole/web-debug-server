@@ -45,7 +45,7 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	if len(CLI.BasicAuth) > 0 {
 		user, pass, ok := req.BasicAuth()
 		if !ok {
-			fmt.Println("Error parsing basic auth")
+			lg.LogError("Error parsing sent basic auth", logrus.Fields{})
 			resp.WriteHeader(401)
 			return
 		}
