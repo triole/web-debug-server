@@ -82,6 +82,8 @@ simple web server for debugging purposes
 Flags:
   -h, --help                      Show context-sensitive help.
   -p, --port=9999                 port where to serve
+  -b, --basic-auth=USER:PASS:...
+                                  enable basic auth
   -r, --response-delay=RESPONSE-DELAY,...
                                   server response delay in ms, use twice to
                                   define range for a random value before each
