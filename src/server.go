@@ -41,6 +41,24 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 			) * time.Millisecond,
 		)
 	}
+
+	if len(CLI.BasicAuth) > 0 {
+		user, pass, ok := req.BasicAuth()
+		if !ok {
+			fmt.Println("Error parsing basic auth")
+			resp.WriteHeader(401)
+			return
+		}
+		if user != CLI.BasicAuth[0] || pass != CLI.BasicAuth[1] {
+			lg.LogError("Credentials incorrect", logrus.Fields{
+				"user": user,
+				"pass": pass,
+			})
+			resp.WriteHeader(401)
+			return
+		}
+	}
+
 	responseCode := parseResponseCode(req.URL.String())
 	resp.WriteHeader(responseCode)
 	data := tResponse{

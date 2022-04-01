@@ -17,6 +17,7 @@ type tConf struct {
 	Bind          string
 	Port          int
 	ResponseDelay []int
+	BasicAuth     []string
 }
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 	conf := tConf{
 		Port:          CLI.Port,
 		ResponseDelay: CLI.ResponseDelay,
+		BasicAuth:     CLI.BasicAuth,
 	}
 
 	lg = logging.Init(CLI.LogFile, CLI.JSONLog)
