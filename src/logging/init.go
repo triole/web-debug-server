@@ -17,7 +17,7 @@ func Init(logFile string, JSONLog bool) (lg Logging) {
 	timeStampFormat := "2006-01-02 15:04:05.000 MST"
 	lg.Logrus = logrus.New()
 
-	if JSONLog == true {
+	if JSONLog {
 		lg.Logrus.SetFormatter(&logrus.JSONFormatter{
 			FieldMap: logrus.FieldMap{
 				logrus.FieldKeyTime:  "date",

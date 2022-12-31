@@ -65,7 +65,7 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		Method: req.Method,
 		Proto:  req.Proto,
 		Host:   req.Host,
-		URL:    fmt.Sprintf("%s", req.URL),
+		URL:    req.URL.String(),
 		Request: tRequest{
 			Headers: reqHeaders(req),
 			Body:    queryBody(resp, req),
@@ -73,7 +73,7 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		},
 	}
 
-	if CLI.Verbose == false {
+	if !CLI.Verbose {
 		lg.LogInfo("Got request", logrus.Fields{
 			"method":        data.Method,
 			"proto":         data.Proto,
@@ -86,7 +86,7 @@ func (h *handler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			lg.LogError(err.Error(), nil)
 		}
-		lg.LogInfo("Got request", logrus.Fields{"data": fmt.Sprintf("%s", jsonData)})
+		lg.LogInfo("Got request", logrus.Fields{"data": string(jsonData)})
 	}
 	resp.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(resp).Encode(data)
@@ -114,9 +114,7 @@ func reqHeaders(r *http.Request) (rh map[string][]string) {
 	for name, values := range r.Header {
 		// loop over all values for the name
 		arr := []string{}
-		for _, val := range values {
-			arr = append(arr, val)
-		}
+		arr = append(arr, values...)
 		rh[name] = arr
 	}
 	return

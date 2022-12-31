@@ -41,7 +41,7 @@ func main() {
 		Handler: &handler{},
 	}
 
-	if lg.LogToFile == true {
+	if lg.LogToFile {
 		fmt.Printf(
 			"Run server\tport=%d, verbose=%v, logfile=%s\n",
 			conf.Port, CLI.Verbose, CLI.LogFile,
