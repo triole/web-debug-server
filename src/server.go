@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -101,7 +101,7 @@ func queryParams(w http.ResponseWriter, r *http.Request) (qp map[string][]string
 }
 
 func queryBody(w http.ResponseWriter, r *http.Request) (body string) {
-	bodyBytes, err := ioutil.ReadAll(r.Body)
+	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		fmt.Printf("Error parsing requests body: %q\n", err)
 	}
