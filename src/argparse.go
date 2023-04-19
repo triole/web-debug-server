@@ -19,13 +19,13 @@ var (
 )
 
 var CLI struct {
-	Port          int      `help:"port where to serve" short:p default:9999`
-	BasicAuth     []string `help:"enable basic auth" short:b placeholder:USER:PASS sep::`
-	ResponseDelay []int    `help:"server response delay in ms, use twice to define range for a random value before each request" short:r`
-	JSONLog       bool     `help:"enable json log, instead of text one" short:j`
-	LogFile       string   `help:"log file" short:l default:/dev/stdout`
-	Verbose       bool     `help:"verbose mode, print full response data set" short:v`
-	VersionFlag   bool     `help:"display version" short:V`
+	Port          int      `help:"port where to serve" short:"p" default:"9999"`
+	BasicAuth     []string `help:"enable basic auth" short:"b" placeholder:"USER:PASS" sep:":"`
+	ResponseDelay []int    `help:"server response delay in ms, use twice to define range for a random value before each request" short:"r"`
+	JSONLog       bool     `help:"enable json log, instead of text one" short:"j"`
+	LogFile       string   `help:"log file" short:"l" default:"/dev/stdout"`
+	Verbose       bool     `help:"verbose mode, print full response data set" short:"v"`
+	VersionFlag   bool     `help:"display version" short:"V"`
 }
 
 func parseArgs() {
@@ -42,7 +42,7 @@ func parseArgs() {
 	)
 	_ = ctx.Run()
 
-	if CLI.VersionFlag == true {
+	if CLI.VersionFlag {
 		printBuildTags(BUILDTAGS)
 		os.Exit(0)
 	}
@@ -76,10 +76,4 @@ func printBuildTags(buildtags string) {
 		fmt.Printf("%"+strconv.Itoa(maxlen)+"s\t%s\n", el.Key, el.Val)
 	}
 	fmt.Printf("\n")
-}
-
-func alnum(s string) string {
-	s = strings.ToLower(s)
-	re := regexp.MustCompile("[^a-z0-9_-]")
-	return re.ReplaceAllString(s, "-")
 }

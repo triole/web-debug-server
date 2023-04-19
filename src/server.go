@@ -133,9 +133,9 @@ func parseResponseCode(s string) (code int) {
 }
 
 func randomIntRange(min, max int) int {
-	rand.Seed(time.Now().UnixNano())
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	if max <= min {
 		max = min + 1
 	}
-	return rand.Intn(max-min) + min
+	return r.Intn(max-min) + min
 }
